@@ -43,7 +43,8 @@ const pointTotal = document.getElementById('point-total');
 let activeSquare, word;
 let wordLength = Math.floor(Math.random() * 5)+3;
 const target = document.getElementById('target-point-total');
-const targetPointTotal = target.innerHTML;
+const targetPointTotal = wordLength*2;
+target.innerHTML = targetPointTotal
 
 
 for (let i = 0; i < wordLength; i++) {
@@ -57,6 +58,7 @@ for (let i = 0; i < wordLength; i++) {
         }
         activeSquare = inputSquare;
         inputSquare.classList.add('active');
+        activeSquare.focus
     });
 }
 
@@ -105,9 +107,9 @@ document.getElementById('submission-button').addEventListener("click", async () 
     if (targetPointTotal * 1 === totalScore() * 1) {
         const isValid = await isValidWord(getCurrentWord());
       if (isValid) {
-        alert('good');
+        alert('Correct!');
       } else {
-        alert('bad');
+        alert('Not a valid word!');
       }
     }
     else {alert(`The scores don't match`)}

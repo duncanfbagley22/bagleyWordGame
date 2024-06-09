@@ -7,7 +7,8 @@
     --main-dark-grey:#373c37;
     --main-med-grey: #727272;
     --main-light-grey: #d9e1e4;
-    --main-black: #000000
+    --main-black: #000000;
+    --main-width: 520px;
 }
 
 nav{
@@ -29,7 +30,7 @@ header{
     top: 6rem;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 520px;
+    width: var(--main-width);
     height: 50px;
     border-radius: 10px;
     border-style: solid;
@@ -47,7 +48,7 @@ header{
     top: 20.25rem;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 520px;
+    width: var(--main-width);
     height: 390px;
     border-radius: 10px;
     border-style: solid;
@@ -64,7 +65,7 @@ header{
     top: 33rem;
     left: 50%;
     transform: translate(-50%);
-    width: 520px;
+    width: var(--main-width);
     height: 70px;
     border-radius: 10px;
     border-style: solid;
@@ -81,7 +82,7 @@ header{
     border-style: solid;
     border-radius: 5px;
     text-align: center;
-    align-content: center;
+    align-items: center;
     display: flex;
     justify-content: center;
 }
@@ -163,4 +164,11 @@ header{
     justify-content: center;
     display: flex;
     color: var(--main-white);
+}
+
+@media (max-width: 770px){
+    :root{
+        --main-width: 440px;
+    }
+    #controls{font-size: 12px;}
 }
