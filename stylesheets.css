@@ -98,7 +98,7 @@ header{
 }
 
 .square-input{
-    visibility: hidden;
+    width: 10px;
 }
 
 .active{
