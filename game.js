@@ -67,6 +67,15 @@ for (let i = 0; i < wordLength; i++) {
         inputSquare.classList.add('active');
         inputElement.focus();
     });
+    inputElement.addEventListener('focus', () => {
+        inputElement.style.opacity = '1';
+        inputElement.style.pointerEvents = 'auto';
+    });
+
+    inputElement.addEventListener('blur', () => {
+        inputElement.style.opacity = '0';
+        inputElement.style.pointerEvents = 'none';
+    });
 }
 
 document.addEventListener('keydown', (event) => {
