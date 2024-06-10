@@ -168,7 +168,7 @@ header{
 
 @media (max-width: 770px){
     :root{
-        --main-width: 440px;
+        --main-width: 90%;
     }
     #controls{font-size: 12px;}
 }
