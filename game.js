@@ -50,7 +50,7 @@ target.innerHTML = targetPointTotal
 for (let i = 0; i < wordLength; i++) {
     const inputSquare = document.createElement('div');
     inputSquare.classList.add('square');
-
+    
     const inputElement = document.createElement('input');
     inputElement.type = 'text';
     inputElement.maxLength = 1;
@@ -62,20 +62,27 @@ for (let i = 0; i < wordLength; i++) {
     inputSquare.addEventListener('click', () => {
         if (activeSquare) {
             activeSquare.classList.remove('active');
-            activeSquare.querySelector('.square-input').blur();
+            const activeInput = activeSquare.querySelector('.square-input');
+            activeInput.style.opacity = '0';
+            activeInput.style.pointerEvents = 'none';
         }
         activeSquare = inputSquare;
         inputSquare.classList.add('active');
+        inputElement.style.opacity = '1';
+        inputElement.style.pointerEvents = 'auto';
         inputElement.focus();
     });
+
     inputElement.addEventListener('focus', () => {
         inputElement.style.opacity = '1';
         inputElement.style.pointerEvents = 'auto';
     });
 
     inputElement.addEventListener('blur', () => {
-        inputElement.style.opacity = '0';
-        inputElement.style.pointerEvents = 'none';
+        if (!inputElement.value) {
+            inputElement.style.opacity = '0';
+            inputElement.style.pointerEvents = 'none';
+        }
     });
 }
 
