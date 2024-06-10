@@ -50,6 +50,13 @@ target.innerHTML = targetPointTotal
 for (let i = 0; i < wordLength; i++) {
     const inputSquare = document.createElement('div');
     inputSquare.classList.add('square');
+
+    const inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.maxLength = 1;
+    inputElement.classList.add('square-input');
+    inputSquare.appendChild(inputElement);
+
     gameBoard.appendChild(inputSquare);
 
     inputSquare.addEventListener('click', () => {
@@ -58,7 +65,7 @@ for (let i = 0; i < wordLength; i++) {
         }
         activeSquare = inputSquare;
         inputSquare.classList.add('active');
-        activeSquare.focus
+        inputElement.focus();
     });
 }
 

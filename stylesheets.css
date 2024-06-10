@@ -97,6 +97,10 @@ header{
     cursor: pointer;
 }
 
+.square-input{
+    visibility: hidden;
+}
+
 .active{
     background-color: var(--main-light-purple);
     transform: scale(1.2);
