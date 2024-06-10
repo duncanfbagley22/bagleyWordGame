@@ -62,6 +62,7 @@ for (let i = 0; i < wordLength; i++) {
     inputSquare.addEventListener('click', () => {
         if (activeSquare) {
             activeSquare.classList.remove('active');
+            activeSquare.querySelector('.square-input').blur();
         }
         activeSquare = inputSquare;
         inputSquare.classList.add('active');
