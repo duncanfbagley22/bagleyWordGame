@@ -9,6 +9,7 @@
     --main-light-grey: #d9e1e4;
     --main-black: #000000;
     --main-width: 520px;
+    --controls-subcontainer-width: 22%;
 }
 
 nav{
@@ -98,21 +99,29 @@ header{
 }
 
 .square-input {
-    width: 90%;
-    height: 90%;
-    border: none;
-    text-align: center;
-    font-size: 24px;
+    position: absolute;
+    width: 95%;
+    height: 95%;
     opacity: 0;
     pointer-events: none;
-    position: absolute;
+    border-style: solid;
+    border-radius: 5px;
+
 }
 
 .square-input:focus {
     opacity: 1;
     pointer-events: auto;
     outline: none;
-    z-index: 10;
+    caret-color: transparent;
+    cursor: pointer;
+    border-style: solid;
+    border-color: black;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    background-color: var(--main-light-purple);
 }
 
 .active{
@@ -121,18 +130,26 @@ header{
     transition: transform 0s;
 }
 
+.inactive{
+    background-color: var(--main-white);
+    transform: scale(1);
+    transition: transform 0s;
+}
+
 #controls{
     display: flex;
     align-items: center; 
     flex-direction: row;
     gap: 2%;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: bold;
 }
 
 #submission-button{
     all: unset;
     position: relative;
     background-color: var(--main-med-purple);
-    width: 22%;
+    width: var(--controls-subcontainer-width);
     height: 70%; 
     border-radius: 10px;
     border-style: solid;
@@ -141,6 +158,7 @@ header{
     justify-content: center;
     display: flex;
     color: var(--main-white);
+    text-align: center;
 }
 
 #submission-button:hover{
@@ -153,7 +171,7 @@ header{
     all: unset;
     position: relative;
     background-color: var(--main-med-purple);
-    width: 22%;
+    width: var(--controls-subcontainer-width);
     height: 70%; 
     border-radius: 10px;
     border-style: solid;
@@ -173,7 +191,7 @@ header{
 .score-container{
     position: relative;
     background-color: var(--main-med-purple);
-    width: 22%;
+    width: var(--controls-subcontainer-width);
     height: 70%;
     border-radius: 10px;
     border-style: solid;
@@ -187,6 +205,8 @@ header{
 @media (max-width: 770px){
     :root{
         --main-width: 90%;
+        --controls-subcontainer-width: 20%;
     }
     #controls{font-size: 12px;}
+    #submission-button{justify-content: center;}
 }
