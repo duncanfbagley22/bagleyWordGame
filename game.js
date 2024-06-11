@@ -113,12 +113,11 @@ document.getElementById('submission-button').addEventListener("click", async () 
 })
 
 function clearGameBoard() {
-    // Remove all child elements from the game board
     gameBoard.innerHTML = '';
-    // Reinitialize the squares
     initializeBoard();
 }
 
 document.getElementById('clear-button').addEventListener('click', () => {
     clearGameBoard();
+    pointTotal.innerHTML = 0;
 });
