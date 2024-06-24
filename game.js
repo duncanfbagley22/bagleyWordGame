@@ -20,7 +20,6 @@ const gameBoard = document.getElementById('game-board');
 const pointTotal = document.getElementById('point-total');
 let activeSquare, word;
 let wordLength = Math.floor(Math.random() * 5)+3;
-console.log(wordLength);
 const target = document.getElementById('target-point-total');
 const targetPointTotal = wordLength*(Math.floor(Math.random() * 3)+1);
 target.innerHTML = targetPointTotal

@@ -75,7 +75,7 @@ header{
 
 .square{
     background-color: white;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
     width: 40px;
     height: 40px;
@@ -86,10 +86,14 @@ header{
     align-items: center;
     display: flex;
     justify-content: center;
+    padding-left: 0px;
+    box-sizing: border-box;
 }
 
 .square > sub{
     font-size: 12px;
+    align-self: flex-end;
+    margin-bottom: 2px;
 }
 
 .square:hover{
@@ -100,13 +104,12 @@ header{
 
 .square-input {
     position: absolute;
-    width: 95%;
+    width: 89%;
     height: 95%;
     opacity: 0;
     pointer-events: none;
     border-style: solid;
     border-radius: 5px;
-
 }
 
 .square-input:focus {
@@ -124,7 +127,7 @@ header{
     background-color: var(--main-light-purple);
 }
 
-.active{
+/*.active{
     background-color: var(--main-light-purple);
     transform: scale(1.2);
     transition: transform 0s;
@@ -134,7 +137,7 @@ header{
     background-color: var(--main-white);
     transform: scale(1);
     transition: transform 0s;
-}
+}*/
 
 #controls{
     display: flex;
