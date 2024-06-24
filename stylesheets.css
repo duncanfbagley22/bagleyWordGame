@@ -86,58 +86,32 @@ header{
     align-items: center;
     display: flex;
     justify-content: center;
-    padding-left: 0px;
+    padding-left: 1.25%;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 .square > sub{
     font-size: 12px;
     align-self: flex-end;
     margin-bottom: 2px;
-}
-
-.square:hover{
-    transform: scale(1.2);
-    transition: transform 0.2s;
     cursor: pointer;
 }
 
 .square-input {
     position: absolute;
-    width: 89%;
-    height: 95%;
+    width: 97%;
+    height: 97%;
     opacity: 0;
     pointer-events: none;
-    border-style: solid;
+    border-style: none;
     border-radius: 5px;
-}
-
-.square-input:focus {
-    opacity: 1;
-    pointer-events: auto;
-    outline: none;
-    caret-color: transparent;
     cursor: pointer;
-    border-style: solid;
-    border-color: black;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    text-align: center;
-    font-weight: bold;
-    background-color: var(--main-light-purple);
 }
 
-/*.active{
+.active{
     background-color: var(--main-light-purple);
-    transform: scale(1.2);
-    transition: transform 0s;
 }
-
-.inactive{
-    background-color: var(--main-white);
-    transform: scale(1);
-    transition: transform 0s;
-}*/
 
 #controls{
     display: flex;

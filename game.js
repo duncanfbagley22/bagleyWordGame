@@ -40,6 +40,10 @@ function initializeBoard() {
 
         gameBoard.appendChild(inputSquare);
 
+        document.addEventListener('click', function(event) {
+            if (!activeSquare.contains(event.target)) {activeSquare.classList.remove('active')};
+        });
+
         inputSquare.addEventListener('click', () => {
             if (activeSquare) {
                 activeSquare.classList.remove('active');
@@ -58,7 +62,6 @@ function initializeBoard() {
                 inputSquare.appendChild(inputElement);
         
                 inputSquare.classList.remove('active');
-                inputSquare.classList.add('inactive');
                 activeSquare = null;
         
                 const score = totalScore();
@@ -120,3 +123,5 @@ document.getElementById('clear-button').addEventListener('click', () => {
     clearGameBoard();
     pointTotal.innerHTML = 0;
 });
+
+
