@@ -162,12 +162,32 @@ function initializeBoard() {
                         updateScore();
                     }
                 });
+
+                inputElement.addEventListener('keydown', (event) => {
+                    if (event.key.length === 1 && !event.metaKey && !event.ctrlKey) { // Check for single character key press
+                        gridElements[row][col] = event.key.toUpperCase();
+                        inputElement.value = event.key.toUpperCase();
+                        const selectedLetter = inputElement.value.trim().toUpperCase();
+                        const letterScore = getLetterScore(selectedLetter);
+                        if (selectedLetter && letterScore !== null) {
+                            inputSquare.innerHTML = `<strong>${selectedLetter}</strong><sub>${letterScore}</sub>`;
+                            inputSquare.appendChild(inputElement);
+                            activeWordList = updateWords();
+                
+                            // Move the active class to the next square
+                            moveToNextSquare(row, col);
+                            updateScore();
+                        }
+                        event.preventDefault(); // Prevent the default action to avoid adding the character again
+                    }
+                    else if (event.key === 'Backspace' && inputElement.value==='') {moveToNextSquare(row-1, col-1);}
+                });
             } else {
                 // Creates an empty square if the square location is blank
                 const emptySquare = document.createElement('div');
                 emptySquare.classList.add('empty-square');
                 gameBoard.appendChild(emptySquare);
-            }
+                }
         }
     }
 
@@ -225,9 +245,6 @@ function initializeBoard() {
         document.getElementById('point-total').innerHTML = score;
     }
 }
-
-
-
 
 initializeBoard();
 
@@ -313,6 +330,7 @@ async function processWords(activeWordList, listOfWordLocations, isValidWord) {
 // Function to notify of results
 async function processResults() {
     if (lengthMistakeList.length>0 || activeWordList.length===0) {alert(`Make sure to enter a letter in all squares`)};
+    console.log(activeWordList.length);
     if (validityMistakeList.length>0) {alert(`${validityMistakeList} is not a word`)};
     if (targetPointTotal*1===pointTotal.innerHTML*1 && lengthMistakeList.length===0 && validityMistakeList.length===0) {alert(`Hooray! You got it!`)}
 }
