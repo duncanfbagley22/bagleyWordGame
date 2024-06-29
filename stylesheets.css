@@ -23,6 +23,7 @@ nav{
 
 body{
     background-color:var(--main-light-purple);
+    overflow: hidden;
 }
 
 header{
@@ -41,23 +42,37 @@ header{
     display: flex;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
 }
 
-#game-board{
+#game-board-container{
     position: absolute;
     background-color: var(--main-blue);
-    top: 20.25rem;
+    top: 20.28rem;
     left: 50%;
     transform: translate(-50%, -50%);
     width: var(--main-width);
     height: 390px;
     border-radius: 10px;
     border-style: solid;
-    display: flex;
-    gap: 5px;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+}
+
+#game-board{
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(8, 40px);
+    grid-template-rows: repeat(8, 1fr);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    row-gap: 5px;
+    column-gap: 5px;
+    width: calc(var(--main-width)*.4);
+    justify-content: center;
+    align-items: center;
 }
 
 #controls{
@@ -71,6 +86,7 @@ header{
     border-radius: 10px;
     border-style: solid;
     justify-content: space-around;
+    box-sizing: border-box;
 }
 
 .square{
@@ -89,6 +105,8 @@ header{
     padding-left: 1.25%;
     box-sizing: border-box;
     cursor: pointer;
+    left: 50%;
+    transform: translate(-50%);
 }
 
 .square > sub{
@@ -107,6 +125,24 @@ header{
     border-style: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.empty-square {
+    background-color: black;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    left: 50%;
+    transform: translate(-50%);
+    opacity: 1;
+    border-style: solid;
+    border-radius: 5px;
 }
 
 .active{
