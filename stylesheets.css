@@ -16,13 +16,44 @@
     display: none;
 }
 
+ul{
+    position: relative;
+    left: 5px;
+    top: 150px;
+}
+
 nav{
     position: absolute;
-    background-color: var(--main-med-grey);
+    background-color: var(--main-light-grey);
     width: 100%;
     height: 60px;
     top: 0;
-    left: 0
+    left: 0;
+    box-sizing: border-box;
+    border-bottom: 2px solid black;
+    align-items: center;
+}
+
+.nav-left{
+    display:flex;
+    justify-content: left;
+    position: absolute;
+
+}
+
+.nav-right{
+    display:flex;
+    justify-content: right;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+i{
+    font-size: 2rem;
+    padding: 10px;
 }
 
 body{
@@ -309,6 +340,8 @@ header{
 .levelButton:active{
     background-color: var(--main-med-purple);
 }
+
+
 
 @media (max-width: 770px){
     :root{
