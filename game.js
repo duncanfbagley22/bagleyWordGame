@@ -1,3 +1,66 @@
+let gameLayout = [];
+
+window.addEventListener('DOMContentLoaded', () => {
+    const levelSelectModal = document.getElementById('levelSelect');
+    const mainContent = document.getElementById('main-content');
+
+    document.getElementById('levelOne').addEventListener('click', () => {
+        gameLayout = [
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,1,1,1,1,1,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0]
+        ];
+        levelSelectModal.style.display = 'none';
+        mainContent.classList.remove('hidden');
+        listOfWordLocations = findWords(gameLayout);
+        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 6)+5);
+        target.innerHTML = targetPointTotal;
+        initializeBoard();
+    });
+    document.getElementById('levelTwo').addEventListener('click', () => {
+        gameLayout = [
+            [0,0,0,0,0,0,0],
+            [0,1,1,1,1,1,0],
+            [0,1,0,0,0,0,0],
+            [0,1,1,1,1,0,0],
+            [0,1,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0]
+        ];
+        levelSelectModal.style.display = 'none';
+        mainContent.classList.remove('hidden');
+        listOfWordLocations = findWords(gameLayout);
+        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 6)+5);
+        target.innerHTML = targetPointTotal;
+        initializeBoard();
+    });
+    document.getElementById('levelThree').addEventListener('click', () => {
+        gameLayout = [
+            [0,0,0,0,0,0,0],
+            [1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1],
+            [1,0,0,1,0,0,1],
+            [0,0,0,1,0,0,1],
+            [0,0,0,0,0,0,1],
+            [0,0,0,0,0,0,1],
+        ];
+        levelSelectModal.style.display = 'none';
+        mainContent.classList.remove('hidden');
+        listOfWordLocations = findWords(gameLayout);
+        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 6)+5);
+        target.innerHTML = targetPointTotal;
+        initializeBoard();
+    });
+});
+
+
 // Set variables for some DOM elements //
 const gameBoard = document.getElementById('game-board');
 const pointTotal = document.getElementById('point-total');
@@ -9,18 +72,7 @@ let gridElements = [];
 let activeWordList = [];
 let lengthMistakeList = [];
 let validityMistakeList = [];
-
-// sets the layout //
-let gameLayout = [
-    [0,0,0,0,0,0,0],
-    [0,1,1,1,1,1,0],
-    [0,1,0,0,0,0,0],
-    [0,1,1,1,0,0,0],
-    [0,0,1,0,0,0,0],
-    [0,1,1,1,1,1,0],
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0]
-];
+let listOfWordLocations, targetPointTotal;
 
 // Determine what are locations of the words in the layout and sets it as //
 function findWords(gameLayout) {
@@ -61,7 +113,7 @@ function findWords(gameLayout) {
     return words;
 }
 
-const listOfWordLocations = findWords(gameLayout);
+
 
 // Sets the score values of each letter //
 const letterScores = [
@@ -78,8 +130,7 @@ function getLetterScore(letter) {
 };
 
 // Set the target score in the page //
-const targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 5)+5);
-target.innerHTML = targetPointTotal
+
 
 // Function that handles inputs of letters and creating the board //
 function initializeBoard() {
@@ -246,8 +297,6 @@ function initializeBoard() {
     }
 }
 
-initializeBoard();
-
 // Get the total score of all the letters on the board //
 const totalScore = () => {
     let totalScore = 0;
@@ -287,6 +336,7 @@ document.getElementById('submission-button').addEventListener("click", async () 
 function clearGameBoard() {
     gameBoard.innerHTML = '';
     initializeBoard();
+    activeWordList = [];
     lengthMistakeList = [];
     validityMistakeList = [];
 }
@@ -329,8 +379,40 @@ async function processWords(activeWordList, listOfWordLocations, isValidWord) {
 
 // Function to notify of results
 async function processResults() {
-    if (lengthMistakeList.length>0 || activeWordList.length===0) {alert(`Make sure to enter a letter in all squares`)};
-    console.log(activeWordList.length);
-    if (validityMistakeList.length>0) {alert(`${validityMistakeList} is not a word`)};
-    if (targetPointTotal*1===pointTotal.innerHTML*1 && lengthMistakeList.length===0 && validityMistakeList.length===0) {alert(`Hooray! You got it!`)}
+    if (lengthMistakeList.length>0 || activeWordList.length===0 || validityMistakeList.length>0 || targetPointTotal*1!=pointTotal.innerHTML*1) {errorBox()};
+    if (targetPointTotal*1===pointTotal.innerHTML*1 && lengthMistakeList.length===0 && validityMistakeList.length===0) {successBox()}
+}
+
+function successBox () {
+
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+
+    const successBox = document.createElement('div');
+    successBox.classList.add('successBox');
+    successBox.style.visibility = 'visible';
+    successBox.textContent = 'Hooray! You got it! Refresh to play again';
+    overlay.appendChild(successBox);
+    document.body.appendChild(overlay);
+}
+
+function errorBox () {
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+
+    const errorBox = document.createElement('div');
+    errorBox.classList.add('errorBox');
+    errorBox.style.visibility = 'visible';
+
+    if (lengthMistakeList.length>0 || activeWordList.length===0) {errorBox.textContent = `Make sure to enter a letter in all squares`}
+    else if (validityMistakeList.length>0) {errorBox.textContent = `The following are not words: ${validityMistakeList}`}
+    else if (targetPointTotal*1!=pointTotal.innerHTML*1) {errorBox.textContent = `Close... Keep trying for the exact score`};
+
+    overlay.appendChild(errorBox);
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener('click', () => {
+        document.body.removeChild(overlay);
+    });
+
 }

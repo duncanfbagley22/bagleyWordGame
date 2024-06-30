@@ -12,6 +12,10 @@
     --controls-subcontainer-width: 22%;
 }
 
+.hidden {
+    display: none;
+}
+
 nav{
     position: absolute;
     background-color: var(--main-med-grey);
@@ -39,6 +43,9 @@ header{
     border-color: black;
     color: var(--main-white);
     font-size: 28px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: bold;
+    color: black;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -215,6 +222,94 @@ header{
     color: var(--main-white);
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 80;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.successBox{
+    position: absolute;
+    background-color: var(--main-white);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    z-index: 90;
+    width: 60%;
+    height: 30%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -80%);
+    border-radius: 5px;
+    border-style: solid;
+    text-align: center;
+    align-content: center;
+    visibility: hidden;
+}
+
+.errorBox{
+    position: absolute;
+    background-color: var(--main-white);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    z-index: 90;
+    width: 60%;
+    height: 30%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -80%);
+    border-radius: 5px;
+    border-style: solid;
+    text-align: center;
+    align-content: center;
+}
+
+#levelSelect{
+    position: absolute;
+    background-color: var(--main-white);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    z-index: 95;
+    width: 30%;
+    height: 20rem;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-style: solid;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+
+}
+
+.levelButton{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: large;
+    font-weight: bold;
+    color: black;
+    height: 5rem;
+    margin: 0.5rem 0;
+    width: 90%;
+    border-radius: 5px;
+    border-style: solid;
+}
+
+.levelButton:hover{
+    cursor: pointer;
+    background-color: var(--main-light-purple);
+}
+
+.levelButton:active{
+    background-color: var(--main-med-purple);
+}
+
 @media (max-width: 770px){
     :root{
         --main-width: 90%;
@@ -222,4 +317,8 @@ header{
     }
     #controls{font-size: 12px;}
     #submission-button{justify-content: center;}
+    .successBox{width: 70%; height:20%}
+    .errorBox{width: 70%; height:20%}
+    #levelSelect{width: 80%}
+    header{font-size: 18px;}
 }
