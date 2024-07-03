@@ -6,31 +6,33 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('levelOne').addEventListener('click', () => {
         gameLayout = [
-            [0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0],
-            [0,1,1,1,1,1,0],
-            [0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0]
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0],
+            [0,1,1,1,1,0],
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0]
         ];
         levelSelectModal.style.display = 'none';
         mainContent.classList.remove('hidden');
         listOfWordLocations = findWords(gameLayout);
         targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 6)+5);
         target.innerHTML = targetPointTotal;
+        allowLetterIconClick();
+        allowHowTo();
         initializeBoard();
     });
     document.getElementById('levelTwo').addEventListener('click', () => {
         gameLayout = [
             [0,0,0,0,0,0,0],
             [0,1,1,1,1,1,0],
-            [0,1,0,0,0,0,0],
-            [0,1,1,1,1,0,0],
-            [0,1,0,0,0,0,0],
-            [0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0],
+            [0,0,0,1,0,0,0],
+            [0,0,0,1,0,0,0],
+            [0,0,0,1,0,0,0],
+            [0,0,0,1,0,0,0],
+            [0,1,1,1,1,1,0],
             [0,0,0,0,0,0,0]
         ];
         levelSelectModal.style.display = 'none';
@@ -38,24 +40,28 @@ window.addEventListener('DOMContentLoaded', () => {
         listOfWordLocations = findWords(gameLayout);
         targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 6)+5);
         target.innerHTML = targetPointTotal;
+        allowLetterIconClick();
+        allowHowTo();
         initializeBoard();
     });
     document.getElementById('levelThree').addEventListener('click', () => {
         gameLayout = [
             [0,0,0,0,0,0,0],
             [1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,1],
+            [1,0,0,1,0,0,1],
             [1,1,1,1,1,1,1],
             [1,0,0,1,0,0,1],
-            [0,0,0,1,0,0,1],
-            [0,0,0,0,0,0,1],
-            [0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
         ];
         levelSelectModal.style.display = 'none';
         mainContent.classList.remove('hidden');
         listOfWordLocations = findWords(gameLayout);
         targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 6)+5);
         target.innerHTML = targetPointTotal;
+        allowLetterIconClick();
+        allowHowTo();
         initializeBoard();
     });
 });
@@ -113,8 +119,6 @@ function findWords(gameLayout) {
     return words;
 }
 
-
-
 // Sets the score values of each letter //
 const letterScores = [
     ['A',1],['B',3],['C',3],['D',2],['E',1],['F',4],['G',2],
@@ -128,9 +132,6 @@ function getLetterScore(letter) {
     const scorePair = letterScores.find(pair => pair[0] === letter);
     return scorePair ? scorePair[1] : null;
 };
-
-// Set the target score in the page //
-
 
 // Function that handles inputs of letters and creating the board //
 function initializeBoard() {
@@ -416,3 +417,88 @@ function errorBox () {
     });
 
 }
+
+function allowLetterIconClick() {
+    const letterIcon = document.getElementById('letterIcon');
+
+    letterIcon.addEventListener('click', () => {
+        let container = document.querySelector('.letterScores');
+
+        if (container) {
+            container.classList.remove('fade-in');
+            container.classList.add('fade-out');
+            letterIcon.style.color = 'black';
+
+            container.addEventListener('animationend', function onAnimationEnd() {
+                container.remove();
+                container.removeEventListener('animationend', onAnimationEnd);
+            });
+        } else {
+            container = document.createElement('div');
+            container.classList.add('letterScores');
+            container.classList.add('fade-in');
+            letterIcon.style.color = 'var(--main-blue)';
+
+            const header = document.createElement('h1');
+            header.innerHTML = 'Scores by Letter';
+            header.style.textAlign = 'center';
+            container.appendChild(header);
+
+            const letters = ['A1', 'B3', 'C3', 'D2', 'E1', 'F4', 'G2', 'H4', 'I1', 'J8', 'K5', 'L1', 'M3', 'N1', 'O1', 'P3', 'Q10', 'R1', 'S1', 'T1', 'U1', 'V4', 'W4', 'X8', 'Y4', 'Z10'];
+
+            for (let i = 0; i < letters.length; i++) {
+                const letterSquare = document.createElement('div');
+                letterSquare.classList.add('scoreSquare');
+
+                const letter = letters[i];
+                const mainLetter = document.createElement('span');
+                mainLetter.textContent = letter[0];
+                letterSquare.appendChild(mainLetter);
+
+                if (letter.length > 1) {
+                    const subscript = document.createElement('sub');
+                    subscript.textContent = letter.slice(1);
+                    letterSquare.appendChild(subscript);
+                }
+
+                container.appendChild(letterSquare);
+            }
+
+            letterScoresContainer.appendChild(container);
+        }
+    });
+};
+
+function allowHowTo() {
+    const howToIcon = document.getElementById('howToIcon');
+
+    howToIcon.addEventListener('click', () => {
+        let container = document.querySelector('.howTo');
+
+        if (container) {
+            container.classList.remove('fade-in');
+            container.classList.add('fade-out');
+            howToIcon.style.color = 'black';
+
+            container.addEventListener('animationend', function onAnimationEnd() {
+                container.remove();
+                container.removeEventListener('animationend', onAnimationEnd);
+            });
+        } else {
+            container = document.createElement('div');
+            container.classList.add('howTo');
+            container.classList.add('fade-in');
+            howToIcon.style.color = 'var(--main-blue)';
+
+            const header = document.createElement('h1');
+            const howToBody = document.createElement('p');
+            howToBody.innerHTML = 'Enter a letter in each square. The scores for each letter are added together for the current score. Try to enter words using each square to reach the target score.' + "<br />" + "<br />" + 'Press clear to erase entire board' + "<br />" + "<br />" + 'Press X' + "<sub>1</sub>" + ' icon to see scores by letter'  + "<br />" + "<br />" + 'Use comments icon to add comments on the whole project, and the construction icon to see future plans';
+            header.innerHTML = 'How to Play';
+            header.style.textAlign = 'center';
+            container.appendChild(header);
+            container.appendChild(howToBody);
+
+            letterScoresContainer.appendChild(container);
+        }
+    });
+};
