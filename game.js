@@ -1,9 +1,38 @@
-let gameLayout = [];
+// GLOBAL VARIABLES //
 
+// Set variables for some DOM elements //
+const gameBoard = document.getElementById('game-board');
+const pointTotal = document.getElementById('point-total');
+const target = document.getElementById('target-point-total');
+
+// Create some other variables //
+let activeSquare, word, listOfWordLocations, targetPointTotal;
+let gameLayout = [];
+let gridElements = [];
+let activeWordList = [];
+let lengthMistakeList = [];
+let validityMistakeList = [];
+
+// Sets the score values of each letter //
+const letterScores = [
+    ['A',1],['B',3],['C',3],['D',2],['E',1],['F',4],['G',2],
+    ['H',4],['I',1],['J',8],['K',5],['L',1],['M',3],['N',1],
+    ['O',1],['P',3],['Q',10],['R',1],['S',1],['T',1],['U',1],
+    ['V',4],['W',4],['X',8],['Y',4],['Z',10]
+];
+
+// END GLOBAL VARIABLES //
+
+
+
+// INITIAL EVENT //
+
+// Level select page load and setting of layout and target point amount //
 window.addEventListener('DOMContentLoaded', () => {
     const levelSelectModal = document.getElementById('levelSelect');
     const mainContent = document.getElementById('main-content');
 
+    // Level 1 button click, set the layout, turn on icons, add target point total //
     document.getElementById('levelOne').addEventListener('click', () => {
         gameLayout = [
             [0,0,0,0,0,0],
@@ -24,6 +53,7 @@ window.addEventListener('DOMContentLoaded', () => {
         allowHowTo();
         initializeBoard();
     });
+    // Level 2 button click, set the layout, turn on icons, add target point total //
     document.getElementById('levelTwo').addEventListener('click', () => {
         gameLayout = [
             [0,0,0,0,0,0,0],
@@ -44,6 +74,7 @@ window.addEventListener('DOMContentLoaded', () => {
         allowHowTo();
         initializeBoard();
     });
+    // Level 2 button click, set the layout, turn on icons, add target point total //
     document.getElementById('levelThree').addEventListener('click', () => {
         gameLayout = [
             [0,0,0,0,0,0,0],
@@ -66,72 +97,11 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// END INITIAL EVENT //
 
-// Set variables for some DOM elements //
-const gameBoard = document.getElementById('game-board');
-const pointTotal = document.getElementById('point-total');
-const target = document.getElementById('target-point-total');
 
-// Create some other variables //
-let activeSquare, word;
-let gridElements = [];
-let activeWordList = [];
-let lengthMistakeList = [];
-let validityMistakeList = [];
-let listOfWordLocations, targetPointTotal;
 
-// Determine what are locations of the words in the layout and sets it as //
-function findWords(gameLayout) {
-    let words = [];
-
-    function addWord(positions) {
-        if (positions.length >= 3) {
-            words.push(positions);
-        }
-    }
-
-    for (let i = 0; i < gameLayout.length; i++) {
-        let horizontalWord = [];
-        for (let j = 0; j < gameLayout[i].length; j++) {
-            if (gameLayout[i][j] === 1) {
-                horizontalWord.push([i, j]);
-            } else {
-                addWord(horizontalWord);
-                horizontalWord = [];
-            }
-        }
-        addWord(horizontalWord);
-    }
-
-    for (let j = 0; j < gameLayout[0].length; j++) {
-        let verticalWord = [];
-        for (let i = 0; i < gameLayout.length; i++) {
-            if (gameLayout[i][j] === 1) {
-                verticalWord.push([i, j]);
-            } else {
-                addWord(verticalWord);
-                verticalWord = [];
-            }
-        }
-        addWord(verticalWord);
-    }
-
-    return words;
-}
-
-// Sets the score values of each letter //
-const letterScores = [
-    ['A',1],['B',3],['C',3],['D',2],['E',1],['F',4],['G',2],
-    ['H',4],['I',1],['J',8],['K',5],['L',1],['M',3],['N',1],
-    ['O',1],['P',3],['Q',10],['R',1],['S',1],['T',1],['U',1],
-    ['V',4],['W',4],['X',8],['Y',4],['Z',10]
-];
-
-// Function to determine the score for a given letter on the board //
-function getLetterScore(letter) {
-    const scorePair = letterScores.find(pair => pair[0] === letter);
-    return scorePair ? scorePair[1] : null;
-};
+// GAMEBOARD SETUP AND ACTIONS //
 
 // Function that handles inputs of letters and creating the board //
 function initializeBoard() {
@@ -298,6 +268,57 @@ function initializeBoard() {
     }
 }
 
+// END GAMEBOARD SETUP AND ACTIONS // 
+
+
+
+// FUNCTIONS USED IN GAMEBOARD //
+
+// Determine what are locations of the words in the layout and sets it as //
+function findWords(gameLayout) {
+    let words = [];
+
+    function addWord(positions) {
+        if (positions.length >= 3) {
+            words.push(positions);
+        }
+    }
+
+    for (let i = 0; i < gameLayout.length; i++) {
+        let horizontalWord = [];
+        for (let j = 0; j < gameLayout[i].length; j++) {
+            if (gameLayout[i][j] === 1) {
+                horizontalWord.push([i, j]);
+            } else {
+                addWord(horizontalWord);
+                horizontalWord = [];
+            }
+        }
+        addWord(horizontalWord);
+    }
+
+    for (let j = 0; j < gameLayout[0].length; j++) {
+        let verticalWord = [];
+        for (let i = 0; i < gameLayout.length; i++) {
+            if (gameLayout[i][j] === 1) {
+                verticalWord.push([i, j]);
+            } else {
+                addWord(verticalWord);
+                verticalWord = [];
+            }
+        }
+        addWord(verticalWord);
+    }
+
+    return words;
+}
+
+// Function to determine the score for a given letter on the board //
+function getLetterScore(letter) {
+    const scorePair = letterScores.find(pair => pair[0] === letter);
+    return scorePair ? scorePair[1] : null;
+};
+
 // Get the total score of all the letters on the board //
 const totalScore = () => {
     let totalScore = 0;
@@ -314,40 +335,6 @@ const totalScore = () => {
     return totalScore;
 };
 
-// Function to determine whether something is a word //
-async function isValidWord(word) {
-    try{
-        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-        return response.ok;
-    }
-    catch(error) {
-        return false;
-    }
-}
-
-// Event flor clicking the submission button to alert if you've won or if there are errors //
-document.getElementById('submission-button').addEventListener("click", async () => {
-
-    await processWords(activeWordList, listOfWordLocations, isValidWord);
-    processResults();
-
-})
-
-// Function to clear the whole game board //
-function clearGameBoard() {
-    gameBoard.innerHTML = '';
-    initializeBoard();
-    activeWordList = [];
-    lengthMistakeList = [];
-    validityMistakeList = [];
-}
-
-// Event for clicking the clear button which clears the whole board //
-document.getElementById('clear-button').addEventListener('click', () => {
-    clearGameBoard();
-    pointTotal.innerHTML = 0;
-});
-
 // Function to update the list of words with values of the entered letters //
 function updateWords() {
     const words = [];
@@ -360,6 +347,32 @@ function updateWords() {
         words.push(word);
     });
     return words
+}
+
+// END FUNCTIONS USED IN GAMEBOARD //
+
+
+
+// FUNCTIONS USED IN BUTTON EVENTS //
+
+// Function to determine whether something is a word //
+async function isValidWord(word) {
+    try{
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        return response.ok;
+    }
+    catch(error) {
+        return false;
+    }
+}
+
+// Function to clear the whole game board //
+function clearGameBoard() {
+    gameBoard.innerHTML = '';
+    initializeBoard();
+    activeWordList = [];
+    lengthMistakeList = [];
+    validityMistakeList = [];
 }
 
 // Function to take all the letters and maps them to words and determines if they are valid words //
@@ -378,12 +391,13 @@ async function processWords(activeWordList, listOfWordLocations, isValidWord) {
     }
 }
 
-// Function to notify of results
+// Function to notify of results //
 async function processResults() {
     if (lengthMistakeList.length>0 || activeWordList.length===0 || validityMistakeList.length>0 || targetPointTotal*1!=pointTotal.innerHTML*1) {errorBox()};
     if (targetPointTotal*1===pointTotal.innerHTML*1 && lengthMistakeList.length===0 && validityMistakeList.length===0) {successBox()}
 }
 
+// Function to bring up success box //
 function successBox () {
 
     const overlay = document.createElement('div');
@@ -397,6 +411,7 @@ function successBox () {
     document.body.appendChild(overlay);
 }
 
+// Function to bring up error box //
 function errorBox () {
     const overlay = document.createElement('div');
     overlay.classList.add('overlay');
@@ -418,6 +433,13 @@ function errorBox () {
 
 }
 
+// END FUNCTIONS USED IN BUTTON EVENTS //
+
+
+
+// FUNCTIONS USED IN NAVIGATION //
+
+// Function to turn on the option to click the letter icon //
 function allowLetterIconClick() {
     const letterIcon = document.getElementById('letterIcon');
 
@@ -469,6 +491,7 @@ function allowLetterIconClick() {
     });
 };
 
+// Function to turn on the option to click the question mark icon //
 function allowHowTo() {
     const howToIcon = document.getElementById('howToIcon');
 
@@ -502,3 +525,25 @@ function allowHowTo() {
         }
     });
 };
+
+// END FUNCTIONS USED IN NAVIGATION //
+
+
+
+// BUTTONS //
+
+// Event for clicking the clear button which clears the whole board //
+document.getElementById('clear-button').addEventListener('click', () => {
+    clearGameBoard();
+    pointTotal.innerHTML = 0;
+});
+
+// Event flor clicking the submission button to alert if you've won or if there are errors //
+document.getElementById('submission-button').addEventListener("click", async () => {
+
+    await processWords(activeWordList, listOfWordLocations, isValidWord);
+    processResults();
+
+})
+
+// END BUTTONS //
