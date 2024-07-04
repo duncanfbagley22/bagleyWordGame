@@ -43,7 +43,7 @@ window.addEventListener('DOMContentLoaded', () => {
         levelSelectModal.style.display = 'none';
         mainContent.classList.remove('hidden');
         listOfWordLocations = findWords(gameLayout);
-        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 7)+7);
+        targetPointTotal = getRandomInt(sumArrayValues(gameLayout), sumArrayValues(gameLayout) * 3);
         target.innerHTML = targetPointTotal;
         allowLetterIconClick();
         allowHowTo();
@@ -55,7 +55,7 @@ window.addEventListener('DOMContentLoaded', () => {
         levelSelectModal.style.display = 'none';
         mainContent.classList.remove('hidden');
         listOfWordLocations = findWords(gameLayout);
-        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 7)+6);
+        targetPointTotal = getRandomInt(sumArrayValues(gameLayout), sumArrayValues(gameLayout) * 3);
         target.innerHTML = targetPointTotal;
         allowLetterIconClick();
         allowHowTo();
@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', () => {
         levelSelectModal.style.display = 'none';
         mainContent.classList.remove('hidden');
         listOfWordLocations = findWords(gameLayout);
-        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 8)+6);
+        targetPointTotal = getRandomInt(sumArrayValues(gameLayout), sumArrayValues(gameLayout) * 3);
         target.innerHTML = targetPointTotal;
         allowLetterIconClick();
         allowHowTo();
@@ -98,13 +98,13 @@ function initializeBoard() {
     for (let row = 0; row < gameLayout.length; row++) {
         gridElements[row] = [];
         for (let col = 0; col < gameLayout[row].length; col++) {
-            if (gameLayout[row][col] > 0) {
+            if (gameLayout[row][col] != 0) {
                 // Create squares and inputs based on the game layout
                 const inputSquare = document.createElement('div');
                 inputSquare.classList.add('square');
                 if (gameLayout[row][col] === 2) {inputSquare.classList.add('double-square')};
                 if (gameLayout[row][col] === 3) {inputSquare.classList.add('triple-square')};
-                if (gameLayout[row][col] === 9) {inputSquare.classList.add('negative-square')};
+                if (gameLayout[row][col] === -1) {inputSquare.classList.add('negative-square')};
 
                 const inputElement = document.createElement('input');
                 inputElement.type = 'text';
@@ -158,7 +158,7 @@ function initializeBoard() {
                     if (gameLayout[row][col] === 1) {letterScore = getLetterScore(selectedLetter)};
                     if (gameLayout[row][col] === 2) {letterScore = getLetterScore(selectedLetter) * 2};
                     if (gameLayout[row][col] === 3) {letterScore = getLetterScore(selectedLetter) * 3};
-                    if (gameLayout[row][col] === 9) {letterScore = getLetterScore(selectedLetter) * -1};
+                    if (gameLayout[row][col] === -1) {letterScore = getLetterScore(selectedLetter) * -1};
                     if (selectedLetter && letterScore !== null) {
                         inputSquare.innerHTML = `<strong>${selectedLetter}</strong><sub>${letterScore}</sub>`;
                         inputSquare.appendChild(inputElement);
@@ -177,7 +177,7 @@ function initializeBoard() {
                         if (gameLayout[row][col] === 1) {letterScore = getLetterScore(selectedLetter)};
                         if (gameLayout[row][col] === 2) {letterScore = getLetterScore(selectedLetter) * 2};
                         if (gameLayout[row][col] === 3) {letterScore = getLetterScore(selectedLetter) * 3};
-                        if (gameLayout[row][col] === 9) {letterScore = getLetterScore(selectedLetter) * -1};
+                        if (gameLayout[row][col] === -1) {letterScore = getLetterScore(selectedLetter) * -1};
                         if (selectedLetter && letterScore !== null) {
                             inputSquare.innerHTML = `<strong>${selectedLetter}</strong><sub>${letterScore}</sub>`;
                             inputSquare.appendChild(inputElement);
@@ -216,12 +216,12 @@ function initializeBoard() {
         let moved = false;
 
         // Check for horizontal move first
-        if (currentCol < gameLayout[currentRow].length - 1 && gameLayout[currentRow][currentCol + 1] > 0) {
+        if (currentCol < gameLayout[currentRow].length - 1 && gameLayout[currentRow][currentCol + 1] != 0) {
             focusSquare(currentRow, currentCol + 1);
             moved = true;
         }
         // Check for vertical move next
-        else if (currentRow < gameLayout.length - 1 && gameLayout[currentRow + 1][currentCol] > 0) {
+        else if (currentRow < gameLayout.length - 1 && gameLayout[currentRow + 1][currentCol] != 0) {
             focusSquare(currentRow + 1, currentCol);
             moved = true;
         }
@@ -274,7 +274,7 @@ function findWords(gameLayout) {
     for (let i = 0; i < gameLayout.length; i++) {
         let horizontalWord = [];
         for (let j = 0; j < gameLayout[i].length; j++) {
-            if (gameLayout[i][j] > 0) {
+            if (gameLayout[i][j] != 0) {
                 horizontalWord.push([i, j]);
             } else {
                 addWord(horizontalWord);
@@ -287,7 +287,7 @@ function findWords(gameLayout) {
     for (let j = 0; j < gameLayout[0].length; j++) {
         let verticalWord = [];
         for (let i = 0; i < gameLayout.length; i++) {
-            if (gameLayout[i][j] > 0) {
+            if (gameLayout[i][j] != 0) {
                 verticalWord.push([i, j]);
             } else {
                 addWord(verticalWord);
@@ -369,6 +369,26 @@ function updateWords() {
     });
     return words
 }
+
+// Function used to sum the array //
+function sumArrayValues(arrays) {
+    let totalSum = 0;
+
+    for (let i = 0; i < arrays.length; i++) {
+        for (let j = 0; j < arrays[i].length; j++) {
+            totalSum += arrays[i][j];
+        }
+    }
+
+    return totalSum;
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 
 // END FUNCTIONS USED IN GAMEBOARD //
 
