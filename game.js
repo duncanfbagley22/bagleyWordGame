@@ -1,3 +1,8 @@
+// IMPORT //
+import { levelOneLayouts, levelTwoLayouts, levelThreeLayouts } from './gameLayouts.js';
+// END IMPORT //
+
+
 // GLOBAL VARIABLES //
 
 // Set variables for some DOM elements //
@@ -6,7 +11,7 @@ const pointTotal = document.getElementById('point-total');
 const target = document.getElementById('target-point-total');
 
 // Create some other variables //
-let activeSquare, word, listOfWordLocations, targetPointTotal;
+let activeSquare, word, listOfWordLocations, targetPointTotal, letterScore;
 let gameLayout = [];
 let gridElements = [];
 let activeWordList = [];
@@ -34,20 +39,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Level 1 button click, set the layout, turn on icons, add target point total //
     document.getElementById('levelOne').addEventListener('click', () => {
-        gameLayout = [
-            [0,0,0,0,0,0],
-            [0,0,0,0,0,0],
-            [0,0,0,0,0,0],
-            [0,1,1,1,1,0],
-            [0,0,0,0,0,0],
-            [0,0,0,0,0,0],
-            [0,0,0,0,0,0],
-            [0,0,0,0,0,0]
-        ];
+        gameLayout = levelOneLayouts[Math.floor(Math.random() * 5)];
         levelSelectModal.style.display = 'none';
         mainContent.classList.remove('hidden');
         listOfWordLocations = findWords(gameLayout);
-        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 6)+5);
+        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 7)+7);
         target.innerHTML = targetPointTotal;
         allowLetterIconClick();
         allowHowTo();
@@ -55,20 +51,11 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     // Level 2 button click, set the layout, turn on icons, add target point total //
     document.getElementById('levelTwo').addEventListener('click', () => {
-        gameLayout = [
-            [0,0,0,0,0,0,0],
-            [0,1,1,1,1,1,0],
-            [0,0,0,1,0,0,0],
-            [0,0,0,1,0,0,0],
-            [0,0,0,1,0,0,0],
-            [0,0,0,1,0,0,0],
-            [0,1,1,1,1,1,0],
-            [0,0,0,0,0,0,0]
-        ];
+        gameLayout = levelTwoLayouts[Math.floor(Math.random() * 5)];
         levelSelectModal.style.display = 'none';
         mainContent.classList.remove('hidden');
         listOfWordLocations = findWords(gameLayout);
-        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 6)+5);
+        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 7)+6);
         target.innerHTML = targetPointTotal;
         allowLetterIconClick();
         allowHowTo();
@@ -76,20 +63,11 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     // Level 2 button click, set the layout, turn on icons, add target point total //
     document.getElementById('levelThree').addEventListener('click', () => {
-        gameLayout = [
-            [0,0,0,0,0,0,0],
-            [1,1,1,1,1,1,1],
-            [1,0,0,1,0,0,1],
-            [1,1,1,1,1,1,1],
-            [1,0,0,1,0,0,1],
-            [1,1,1,1,1,1,1],
-            [0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0],
-        ];
+        gameLayout = levelThreeLayouts[Math.floor(Math.random() * 5)];
         levelSelectModal.style.display = 'none';
         mainContent.classList.remove('hidden');
         listOfWordLocations = findWords(gameLayout);
-        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 6)+5);
+        targetPointTotal = listOfWordLocations.length*(Math.floor(Math.random() * 8)+6);
         target.innerHTML = targetPointTotal;
         allowLetterIconClick();
         allowHowTo();
@@ -120,10 +98,13 @@ function initializeBoard() {
     for (let row = 0; row < gameLayout.length; row++) {
         gridElements[row] = [];
         for (let col = 0; col < gameLayout[row].length; col++) {
-            if (gameLayout[row][col] === 1) {
+            if (gameLayout[row][col] > 0) {
                 // Create squares and inputs based on the game layout
                 const inputSquare = document.createElement('div');
                 inputSquare.classList.add('square');
+                if (gameLayout[row][col] === 2) {inputSquare.classList.add('double-square')};
+                if (gameLayout[row][col] === 3) {inputSquare.classList.add('triple-square')};
+                if (gameLayout[row][col] === 9) {inputSquare.classList.add('negative-square')};
 
                 const inputElement = document.createElement('input');
                 inputElement.type = 'text';
@@ -174,7 +155,10 @@ function initializeBoard() {
                 // Event listener to input the letter, add the score to it, and add the score to the point total
                 inputElement.addEventListener('input', () => {
                     const selectedLetter = inputElement.value.trim().toUpperCase();
-                    const letterScore = getLetterScore(selectedLetter);
+                    if (gameLayout[row][col] === 1) {letterScore = getLetterScore(selectedLetter)};
+                    if (gameLayout[row][col] === 2) {letterScore = getLetterScore(selectedLetter) * 2};
+                    if (gameLayout[row][col] === 3) {letterScore = getLetterScore(selectedLetter) * 3};
+                    if (gameLayout[row][col] === 9) {letterScore = getLetterScore(selectedLetter) * -1};
                     if (selectedLetter && letterScore !== null) {
                         inputSquare.innerHTML = `<strong>${selectedLetter}</strong><sub>${letterScore}</sub>`;
                         inputSquare.appendChild(inputElement);
@@ -190,7 +174,10 @@ function initializeBoard() {
                         gridElements[row][col] = event.key.toUpperCase();
                         inputElement.value = event.key.toUpperCase();
                         const selectedLetter = inputElement.value.trim().toUpperCase();
-                        const letterScore = getLetterScore(selectedLetter);
+                        if (gameLayout[row][col] === 1) {letterScore = getLetterScore(selectedLetter)};
+                        if (gameLayout[row][col] === 2) {letterScore = getLetterScore(selectedLetter) * 2};
+                        if (gameLayout[row][col] === 3) {letterScore = getLetterScore(selectedLetter) * 3};
+                        if (gameLayout[row][col] === 9) {letterScore = getLetterScore(selectedLetter) * -1};
                         if (selectedLetter && letterScore !== null) {
                             inputSquare.innerHTML = `<strong>${selectedLetter}</strong><sub>${letterScore}</sub>`;
                             inputSquare.appendChild(inputElement);
@@ -229,12 +216,12 @@ function initializeBoard() {
         let moved = false;
 
         // Check for horizontal move first
-        if (currentCol < gameLayout[currentRow].length - 1 && gameLayout[currentRow][currentCol + 1] === 1) {
+        if (currentCol < gameLayout[currentRow].length - 1 && gameLayout[currentRow][currentCol + 1] > 0) {
             focusSquare(currentRow, currentCol + 1);
             moved = true;
         }
         // Check for vertical move next
-        else if (currentRow < gameLayout.length - 1 && gameLayout[currentRow + 1][currentCol] === 1) {
+        else if (currentRow < gameLayout.length - 1 && gameLayout[currentRow + 1][currentCol] > 0) {
             focusSquare(currentRow + 1, currentCol);
             moved = true;
         }
@@ -287,7 +274,7 @@ function findWords(gameLayout) {
     for (let i = 0; i < gameLayout.length; i++) {
         let horizontalWord = [];
         for (let j = 0; j < gameLayout[i].length; j++) {
-            if (gameLayout[i][j] === 1) {
+            if (gameLayout[i][j] > 0) {
                 horizontalWord.push([i, j]);
             } else {
                 addWord(horizontalWord);
@@ -300,7 +287,7 @@ function findWords(gameLayout) {
     for (let j = 0; j < gameLayout[0].length; j++) {
         let verticalWord = [];
         for (let i = 0; i < gameLayout.length; i++) {
-            if (gameLayout[i][j] === 1) {
+            if (gameLayout[i][j] > 0) {
                 verticalWord.push([i, j]);
             } else {
                 addWord(verticalWord);
@@ -322,11 +309,45 @@ function getLetterScore(letter) {
 // Get the total score of all the letters on the board //
 const totalScore = () => {
     let totalScore = 0;
+    // For regular squares, add score once //
     gameBoard.querySelectorAll('.square').forEach(square => {
         const letterScoreText = square.textContent.trim();
         if (letterScoreText.length > 0) {
             const letter = letterScoreText.charAt(0);
             const letterScore = getLetterScore(letter);
+            if (letterScore !== null) {
+                totalScore += letterScore;
+            }
+        }
+    });
+    // For double squares, add the score again //
+    gameBoard.querySelectorAll('.double-square').forEach(square => {
+        const letterScoreText = square.textContent.trim();
+        if (letterScoreText.length > 0) {
+            const letter = letterScoreText.charAt(0);
+            const letterScore = getLetterScore(letter);
+            if (letterScore !== null) {
+                totalScore += letterScore;
+            }
+        }
+    });
+    // For triple squares, add the score 2 times //
+    gameBoard.querySelectorAll('.triple-square').forEach(square => {
+        const letterScoreText = square.textContent.trim();
+        if (letterScoreText.length > 0) {
+            const letter = letterScoreText.charAt(0);
+            const letterScore = getLetterScore(letter)*2;
+            if (letterScore !== null) {
+                totalScore += letterScore;
+            }
+        }
+    });
+    // For negative squares, remove 2 times to set at a negative value //
+    gameBoard.querySelectorAll('.negative-square').forEach(square => {
+        const letterScoreText = square.textContent.trim();
+        if (letterScoreText.length > 0) {
+            const letter = letterScoreText.charAt(0);
+            const letterScore = getLetterScore(letter)*-2;
             if (letterScore !== null) {
                 totalScore += letterScore;
             }
@@ -515,7 +536,7 @@ function allowHowTo() {
 
             const header = document.createElement('h1');
             const howToBody = document.createElement('p');
-            howToBody.innerHTML = 'Enter a letter in each square. The scores for each letter are added together for the current score. Try to enter words using each square to reach the target score.' + "<br />" + "<br />" + 'Press clear to erase entire board' + "<br />" + "<br />" + 'Press X' + "<sub>1</sub>" + ' icon to see scores by letter'  + "<br />" + "<br />" + 'Use comments icon to add comments on the whole project, and the construction icon to see future plans';
+            howToBody.innerHTML = 'Enter a letter in each square. The scores for each letter are added together for the current score. Try to enter words to reach the target score.' + "<br />" + "<br />" + 'Green squares are worth double. Blue squares are worth triple. Red squares are negative.' + "<br />" + "<br />" + 'Press clear to erase entire board' + "<br />" + "<br />" + 'Press X' + "<sub>1</sub>" + ' icon to see scores by letter'  + "<br />" + "<br />" + 'Use comments icon to add comments on the whole project, and the construction icon to see future plans';
             header.innerHTML = 'How to Play';
             header.style.textAlign = 'center';
             container.appendChild(header);

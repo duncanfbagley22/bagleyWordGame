@@ -26,6 +26,7 @@ p{
     position: relative;
     top: 3rem;
     padding: 1rem;
+    font-size: 14px;
 }
 
 nav{
@@ -146,7 +147,7 @@ header{
     box-sizing: border-box;
 }
 
-.square{
+.square, .empty-square, .double-square{
     background-color: white;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
@@ -161,9 +162,29 @@ header{
     justify-content: center;
     padding-left: 1.25%;
     box-sizing: border-box;
-    cursor: pointer;
     left: 50%;
     transform: translate(-50%);
+}
+
+.square{
+    cursor: pointer;
+}
+
+.empty-square {
+    background-color: black;
+    opacity: 1;
+}
+
+.double-square {
+    background-color: rgb(141, 243, 148);
+}
+
+.triple-square {
+    background-color: rgb(181, 245, 245);
+}
+
+.negative-square {
+    background-color: rgb(245, 181, 181);
 }
 
 .square > sub{
@@ -182,24 +203,6 @@ header{
     border-style: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.empty-square {
-    background-color: black;
-    font-size: 20px;
-    width: 40px;
-    height: 40px;
-    position: relative;
-    text-align: center;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    box-sizing: border-box;
-    left: 50%;
-    transform: translate(-50%);
-    opacity: 1;
-    border-style: solid;
-    border-radius: 5px;
 }
 
 .active{
@@ -440,8 +443,6 @@ header{
     justify-content: center;
     align-content: flex-start;
 }
-
-
 
 @media (max-width: 770px){
     :root{
