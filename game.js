@@ -353,6 +353,8 @@ const totalScore = () => {
             }
         }
     });
+    increaseProgress(totalScore,targetPointTotal)
+
     return totalScore;
 };
 
@@ -368,6 +370,23 @@ function updateWords() {
         words.push(word);
     });
     return words
+}
+
+function increaseProgress(current, target) {
+    const progressBar = document.getElementById('progress-bar');
+    let width = parseInt(progressBar.style.width);
+    const currentScoreIndicator = document.getElementById('point-total-container');
+    const targetScoreIndicator = document.getElementById('target-point-total-container');
+    if (isNaN(width)) width = 0;
+    width = current/target*100*.67;
+    if (width>100) {width = 100};
+    if (width<0) {width = 0};
+    progressBar.style.width = width + '%';
+    currentScoreIndicator.style.left = width + '%';
+    if (current===target && current>0) 
+    {progressBar.style.backgroundColor = '#32CD32'; currentScoreIndicator.style.backgroundColor = '#32CD32'; targetScoreIndicator.style.backgroundColor = '#32CD32'} 
+    else {progressBar.style.backgroundColor = 'var(--main-blue)'; currentScoreIndicator.style.backgroundColor = 'var(--main-blue)'; targetScoreIndicator.style.backgroundColor = 'var(--main-blue)'};
+
 }
 
 // Function used to sum the array //
@@ -433,10 +452,10 @@ async function processWords(activeWordList, listOfWordLocations, isValidWord) {
 }
 
 // Function to notify of results //
-async function processResults() {
+/*async function processResults() {
     if (lengthMistakeList.length>0 || activeWordList.length===0 || validityMistakeList.length>0 || targetPointTotal*1!=pointTotal.innerHTML*1) {errorBox()};
     if (targetPointTotal*1===pointTotal.innerHTML*1 && lengthMistakeList.length===0 && validityMistakeList.length===0) {successBox()}
-}
+}*/
 
 // Function to bring up success box //
 function successBox () {
@@ -574,17 +593,26 @@ function allowHowTo() {
 // BUTTONS //
 
 // Event for clicking the clear button which clears the whole board //
-document.getElementById('clear-button').addEventListener('click', () => {
+/*document.getElementById('clear-button').addEventListener('click', () => {
     clearGameBoard();
     pointTotal.innerHTML = 0;
+});*/
+
+document.querySelectorAll('.key').forEach(function(button) {
+    button.addEventListener('click', function() {
+        this.classList.add('animate');
+        setTimeout(() => {
+            this.classList.remove('animate');
+        }, 300); // duration of the animation in milliseconds
+    });
 });
 
-// Event flor clicking the submission button to alert if you've won or if there are errors //
-document.getElementById('submission-button').addEventListener("click", async () => {
+// Event for clicking the submission button to alert if you've won or if there are errors //
+/*document.getElementById('submission-button').addEventListener("click", async () => {
 
     await processWords(activeWordList, listOfWordLocations, isValidWord);
     processResults();
 
-})
+})*/
 
 // END BUTTONS //
