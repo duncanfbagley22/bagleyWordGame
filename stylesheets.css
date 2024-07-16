@@ -71,7 +71,7 @@ a{
     color: black;
 }
 
-i{
+nav i{
     font-size: 1.5rem;
     padding-left: 10px;
     padding-right: 10px;
@@ -230,28 +230,6 @@ header{
     gap: 2%;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-weight: bold;
-}
-
-#submission-button{
-    all: unset;
-    position: relative;
-    background-color: var(--main-med-purple);
-    width: var(--controls-subcontainer-width);
-    height: 70%; 
-    border-radius: 10px;
-    border-style: solid;
-    border-color: black;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    color: var(--main-white);
-    text-align: center;
-}
-
-#submission-button:hover{
-    background-color: var(--main-light-purple);
-    cursor: pointer;
-    transition-delay: .1s;
 }
 
 #clear-button{
@@ -552,8 +530,18 @@ header{
 /* Special keys */
 .key.enter, .key.backspace {
     grid-column: span 3;
-    font-size: 14px;
+    font-size: 20px;
+    display: flex; /* Ensure flex properties are applied */
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-weight: bold;
 }
+
+.key.enter {
+    font-size: 18px;
+}
+
 
 .row-2 {
     grid-column-start: 1;
@@ -587,4 +575,5 @@ header{
     .keyboard{width: 95%; height: 190px;}
     .key::after{left: 50%;
         transform: translate(-50%, 25%);}
+    .key.enter{font-size: 12px;}
 }
