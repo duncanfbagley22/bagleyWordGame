@@ -576,4 +576,5 @@ header{
     .key::after{left: 50%;
         transform: translate(-50%, 25%);}
     .key.enter{font-size: 12px;}
+    .progress-container{width: calc(var(--main-width)*1.05)}
 }
