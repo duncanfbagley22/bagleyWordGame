@@ -18,29 +18,57 @@
             <i class="fa-regular fa-comment-dots"></i>
         </a>
     </div>
+    <div class="title">Bagley Word Game</div>
     <div class="nav-right">
         <i class="fa-regular fa-circle-question" id="howToIcon"></i>
         <i class="fa-solid fa-subscript" id="letterIcon"></i>
     </div>
 </nav>
 <div id="main-content" class="hidden">
-    <header class="header">Bagley Word Game (work in progress)</header>
     <body>
+        <div class="progress-container">
+            <div id="point-total-container"><span id="point-total">0</span></div>
+            <div class="progress-bar" id="progress-bar"></div>
+            <div id="target-point-total-container"><span id="target-point-total">0</span></div>
+        </div>
         <div id="game-board-container">
             <div id="game-board"></div>
         </div>
-        <div id="controls">
-            <button id="submission-button">Submit Answer</button>
-            <button id="clear-button">Clear</button>
-            <div class="score-container">
-                <span>Target Score: </span><span id="target-point-total">10</span>            
-            </div>
-            <div class="score-container">
-                <span>Current Score: </span><span id="point-total">0</span>
-            </div>
-        </div>
         <div id="letterScoresContainer"></div>
         <div id="howToContainer"></div>
+        <div class="keyboard" id="custom-keyboard">
+            <div class="key" data-value="Q" data-number="10">Q</div>
+            <div class="key" data-value="W" data-number="4">W</div>
+            <div class="key" data-value="E" data-number="1">E</div>
+            <div class="key" data-value="R" data-number="1">R</div>
+            <div class="key" data-value="T" data-number="1">T</div>
+            <div class="key" data-value="Y" data-number="4">Y</div>
+            <div class="key" data-value="U" data-number="1">U</div>
+            <div class="key" data-value="I" data-number="1">I</div>
+            <div class="key" data-value="O" data-number="1">O</div>
+            <div class="key" data-value="P" data-number="3">P</div>
+            <div class="key row-2"></div>
+            <div class="key" data-value="A" data-number="1">A</div>
+            <div class="key" data-value="S" data-number="1">S</div>
+            <div class="key" data-value="D" data-number="2">D</div>
+            <div class="key" data-value="F" data-number="4">F</div>
+            <div class="key" data-value="G" data-number="2">G</div>
+            <div class="key" data-value="H" data-number="4">H</div>
+            <div class="key" data-value="J" data-number="8">J</div>
+            <div class="key" data-value="K" data-number="5">K</div>
+            <div class="key" data-value="L" data-number="1">L</div>
+            
+            <div class="key enter" data-value="enter" id="submission-button">ENTER</div>
+            <div class="key" data-value="Z" data-number="10">Z</div>
+            <div class="key" data-value="X" data-number="8">X</div>
+            <div class="key" data-value="C" data-number="3">C</div>
+            <div class="key" data-value="V" data-number="4">V</div>
+            <div class="key" data-value="B" data-number="3">B</div>
+            <div class="key" data-value="N" data-number="1">N</div>
+            <div class="key" data-value="M" data-number="3">M</div>
+            <div class="key backspace" data-value="Backspace"><i class="fa-solid fa-delete-left"></i></div>
+        </div>
+        
     </body>
 </div>
     <div id="levelSelect">

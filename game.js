@@ -1,9 +1,10 @@
-// IMPORT //
+//! IMPORT SECTION //
+
+// import level layouts //
 import { levelOneLayouts, levelTwoLayouts, levelThreeLayouts } from './gameLayouts.js';
-// END IMPORT //
+//! END IMPORT SECTION //
 
-
-// GLOBAL VARIABLES //
+//! GLOBAL VARIABLES //
 
 // Set variables for some DOM elements //
 const gameBoard = document.getElementById('game-board');
@@ -26,13 +27,13 @@ const letterScores = [
     ['V',4],['W',4],['X',8],['Y',4],['Z',10]
 ];
 
-// END GLOBAL VARIABLES //
+//! END GLOBAL VARIABLES //
 
 
 
-// INITIAL EVENT //
+//! INITIAL EVENT //
 
-// Level select page load and setting of layout and target point amount //
+// Level select page load, setting of layout, load main page and target point amount //
 window.addEventListener('DOMContentLoaded', () => {
     const levelSelectModal = document.getElementById('levelSelect');
     const mainContent = document.getElementById('main-content');
@@ -75,7 +76,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// END INITIAL EVENT //
+//! END INITIAL EVENT //
 
 
 
@@ -83,7 +84,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Function that handles inputs of letters and creating the board //
 function initializeBoard() {
-
     // Clear anything currently on the board
     while (gameBoard.firstChild) {
         gameBoard.removeChild(gameBoard.firstChild);
@@ -102,28 +102,32 @@ function initializeBoard() {
                 // Create squares and inputs based on the game layout
                 const inputSquare = document.createElement('div');
                 inputSquare.classList.add('square');
-                if (gameLayout[row][col] === 2) {inputSquare.classList.add('double-square')};
-                if (gameLayout[row][col] === 3) {inputSquare.classList.add('triple-square')};
-                if (gameLayout[row][col] === -1) {inputSquare.classList.add('negative-square')};
+                if (gameLayout[row][col] === 2) { inputSquare.classList.add('double-square'); }
+                if (gameLayout[row][col] === 3) { inputSquare.classList.add('triple-square'); }
+                if (gameLayout[row][col] === -1) { inputSquare.classList.add('negative-square'); }
 
                 const inputElement = document.createElement('input');
                 inputElement.type = 'text';
                 inputElement.maxLength = 1;
+                inputElement.inputMode = 'none';
                 inputElement.classList.add('square-input');
                 inputSquare.appendChild(inputElement);
                 gameBoard.appendChild(inputSquare);
 
+                // Store the element along with row and column information
+                gridElements[row][col] = { inputElement, inputSquare };
+
                 // Event listener to add an inputted letter to the running list of words
                 inputElement.addEventListener('input', (event) => {
                     if (event.inputType === 'deleteContentBackward') {
-                        gridElements[row][col] = '';
+                        gridElements[row][col].value = '';
                         inputElement.value = '';
                         inputSquare.innerHTML = '';
                         inputSquare.appendChild(inputElement);
                         inputElement.focus();
                         updateScore();
                     } else {
-                        gridElements[row][col] = inputElement.value.trim().toUpperCase();
+                        gridElements[row][col].value = inputElement.value.trim().toUpperCase();
                         activeWordList = updateWords();
                         // Automatically move to the next square
                         moveToNextSquare(row, col);
@@ -152,52 +156,89 @@ function initializeBoard() {
                     inputElement.focus();
                 });
 
-                // Event listener to input the letter, add the score to it, and add the score to the point total
-                inputElement.addEventListener('input', () => {
-                    const selectedLetter = inputElement.value.trim().toUpperCase();
-                    if (gameLayout[row][col] === 1) {letterScore = getLetterScore(selectedLetter)};
-                    if (gameLayout[row][col] === 2) {letterScore = getLetterScore(selectedLetter) * 2};
-                    if (gameLayout[row][col] === 3) {letterScore = getLetterScore(selectedLetter) * 3};
-                    if (gameLayout[row][col] === -1) {letterScore = getLetterScore(selectedLetter) * -1};
-                    if (selectedLetter && letterScore !== null) {
-                        inputSquare.innerHTML = `<strong>${selectedLetter}</strong><sub>${letterScore}</sub>`;
-                        inputSquare.appendChild(inputElement);
-
-                        // Move the active class to the next square
-                        moveToNextSquare(row, col);
-                        updateScore();
-                    }
-                });
-
                 inputElement.addEventListener('keydown', (event) => {
-                    if (event.key.length === 1 && !event.metaKey && !event.ctrlKey) { // Check for single character key press
-                        gridElements[row][col] = event.key.toUpperCase();
-                        inputElement.value = event.key.toUpperCase();
-                        const selectedLetter = inputElement.value.trim().toUpperCase();
-                        if (gameLayout[row][col] === 1) {letterScore = getLetterScore(selectedLetter)};
-                        if (gameLayout[row][col] === 2) {letterScore = getLetterScore(selectedLetter) * 2};
-                        if (gameLayout[row][col] === 3) {letterScore = getLetterScore(selectedLetter) * 3};
-                        if (gameLayout[row][col] === -1) {letterScore = getLetterScore(selectedLetter) * -1};
-                        if (selectedLetter && letterScore !== null) {
-                            inputSquare.innerHTML = `<strong>${selectedLetter}</strong><sub>${letterScore}</sub>`;
-                            inputSquare.appendChild(inputElement);
-                            activeWordList = updateWords();
-                
-                            // Move the active class to the next square
-                            moveToNextSquare(row, col);
-                            updateScore();
-                        }
-                        event.preventDefault(); // Prevent the default action to avoid adding the character again
-                    }
-                    else if (event.key === 'Backspace' && inputElement.value==='') {moveToNextSquare(row-1, col-1);}
+                    handleKeyPress(event, row, col, inputElement, inputSquare);
+                    event.preventDefault();
                 });
             } else {
                 // Creates an empty square if the square location is blank
                 const emptySquare = document.createElement('div');
                 emptySquare.classList.add('empty-square');
                 gameBoard.appendChild(emptySquare);
-                }
+            }
         }
+    }
+
+    // Event listener for custom keyboard clicks
+    document.querySelectorAll('.key').forEach(key => {
+        key.addEventListener('click', () => {
+            const keyValue = key.getAttribute('data-value');
+            const inputSquare = activeSquare;
+            const inputElement = activeSquare.querySelector('input.square-input');
+            if (keyValue != 'Backspace' && keyValue != 'enter') {inputElement.value = keyValue};
+            const position = getActiveSquarePosition();
+            if (position) {
+                handleKeyPress(null, position.row, position.col, inputElement, inputSquare, keyValue);
+            }
+
+        });
+    });
+
+    function handleKeyPress(event, row, col, inputElement, inputSquare, keyValue = null) {
+        const key = keyValue || event.key;
+        const isLetter = /^[a-zA-Z]$/.test(key);
+        if (key.length === 1 && isLetter) {
+            gridElements[row][col].value = key.toUpperCase();
+            inputElement.value = key.toUpperCase();
+            const selectedLetter = inputElement.value.trim().toUpperCase();
+            let letterScore = getLetterScore(selectedLetter);
+            if (gameLayout[row][col] === 2) { letterScore *= 2; }
+            if (gameLayout[row][col] === 3) { letterScore *= 3; }
+            if (gameLayout[row][col] === -1) { letterScore *= -1; }
+            if (selectedLetter && letterScore !== null) {
+                inputSquare.innerHTML = `<strong>${selectedLetter}</strong><sub>${letterScore}</sub>`;
+                inputSquare.appendChild(inputElement);
+                activeWordList = updateWords();
+                moveToNextSquare(row, col);
+                updateScore();
+            }
+        } else if (key === 'Backspace') {
+            if (inputElement.value === '') {
+                moveToPrevSquare(row, col);
+
+                if (col > 0 && gridElements[row][col - 1]) {
+                    const prevSquare = gameBoard.children[row * gameLayout[row].length + col - 1];
+                    const prevInputElement = prevSquare.querySelector('input');
+                    gridElements[row][col - 1].value = '';
+                    if (prevInputElement) {
+                        prevInputElement.value = '';
+                        prevSquare.innerHTML = '';
+                        prevSquare.appendChild(prevInputElement);
+                        prevInputElement.focus();
+                    }
+                } else if (row > 0 && gridElements[row - 1][col]) {
+                    const prevSquare = gameBoard.children[(row - 1) * gameLayout[row].length + col];
+                    const prevInputElement = prevSquare.querySelector('input');
+                    gridElements[row - 1][col].value = '';
+                    if (prevInputElement) {
+                        prevInputElement.value = '';
+                        prevSquare.innerHTML = '';
+                        prevSquare.appendChild(prevInputElement);
+                        prevInputElement.focus();
+                    }
+                }
+                updateScore();
+                activeWordList = updateWords();
+            } else {
+                gridElements[row][col].value = '';
+                inputElement.value = '';
+                inputSquare.innerHTML = '';
+                inputSquare.appendChild(inputElement);
+                inputElement.focus();
+                updateScore();
+                activeWordList = updateWords();
+            }
+        } console.log(activeWordList)
     }
 
     // Event listener to remove the active square CSS if you click anywhere else on the screen
@@ -205,7 +246,8 @@ function initializeBoard() {
 
     // Function to remove active class from activeSquare
     function removeActiveClass(event) {
-        if (activeSquare && !activeSquare.contains(event.target)) {
+        const customKeyboard = document.getElementById('custom-keyboard');
+        if (activeSquare && !activeSquare.contains(event.target) && !customKeyboard.contains(event.target)) {
             activeSquare.classList.remove('active');
             activeSquare = null;
         }
@@ -223,6 +265,30 @@ function initializeBoard() {
         // Check for vertical move next
         else if (currentRow < gameLayout.length - 1 && gameLayout[currentRow + 1][currentCol] != 0) {
             focusSquare(currentRow + 1, currentCol);
+            moved = true;
+        }
+
+        // If no move was made, remove active class and clear activeSquare
+        if (!moved) {
+            if (activeSquare) {
+                activeSquare.classList.remove('active');
+                activeSquare = null;
+            }
+        }
+    }
+
+    // Function to move to the previous square
+    function moveToPrevSquare(currentRow, currentCol) {
+        let moved = false;
+
+        // Check for horizontal move first
+        if (currentCol > 0 && gameLayout[currentRow][currentCol - 1] != 0) {
+            focusSquare(currentRow, currentCol - 1);
+            moved = true;
+        }
+        // Check for vertical move next
+        else if (currentRow > 0 && gameLayout[currentRow - 1][currentCol] != 0) {
+            focusSquare(currentRow - 1, currentCol);
             moved = true;
         }
 
@@ -253,13 +319,26 @@ function initializeBoard() {
         const score = totalScore();
         document.getElementById('point-total').innerHTML = score;
     }
+
+    // Function to get the position of the active square
+    function getActiveSquarePosition() {
+        for (let row = 0; row < gridElements.length; row++) {
+            for (let col = 0; col < gridElements[row].length; col++) {
+                if (gridElements[row][col] && gridElements[row][col].inputSquare === activeSquare) {
+                    return { row, col };
+                }
+            }
+        }
+        return null;
+    }
 }
+
 
 // END GAMEBOARD SETUP AND ACTIONS // 
 
 
 
-// FUNCTIONS USED IN GAMEBOARD //
+//! FUNCTIONS USED IN GAMEBOARD //
 
 // Determine what are locations of the words in the layout and sets it as //
 function findWords(gameLayout) {
@@ -353,21 +432,43 @@ const totalScore = () => {
             }
         }
     });
+    increaseProgress(totalScore,targetPointTotal)
+
     return totalScore;
 };
 
 // Function to update the list of words with values of the entered letters //
 function updateWords() {
     const words = [];
-
     listOfWordLocations.forEach(wordLocations => {
         let word = '';
         wordLocations.forEach(([row, col]) => {
-            word += gridElements[row][col] || '';
+            const gridElement = gridElements[row][col];
+            if (gridElement) {
+                word += gridElement.value || '';
+            }
         });
         words.push(word);
     });
-    return words
+    return words;
+}
+
+// Function that updates the css of the progress bar based on the point values //
+function increaseProgress(current, target) {
+    const progressBar = document.getElementById('progress-bar');
+    let width = parseInt(progressBar.style.width);
+    const currentScoreIndicator = document.getElementById('point-total-container');
+    const targetScoreIndicator = document.getElementById('target-point-total-container');
+    if (isNaN(width)) {width = 0};
+    width = current/target*100*.67;
+    if (width>100) {width = 100};
+    if (width<0) {width = 0};
+    progressBar.style.width = width + '%';
+    currentScoreIndicator.style.left = width + '%';
+    if (current===target && current>0) 
+    {progressBar.style.backgroundColor = '#32CD32'; currentScoreIndicator.style.backgroundColor = '#32CD32'; targetScoreIndicator.style.backgroundColor = '#32CD32'} 
+    else {progressBar.style.backgroundColor = 'var(--main-blue)'; currentScoreIndicator.style.backgroundColor = 'var(--main-blue)'; targetScoreIndicator.style.backgroundColor = 'var(--main-blue)'};
+
 }
 
 // Function used to sum the array //
@@ -383,20 +484,20 @@ function sumArrayValues(arrays) {
     return totalSum;
 }
 
+// Function that generates a random integer between 2 values //
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
-// END FUNCTIONS USED IN GAMEBOARD //
-
+//! END FUNCTIONS USED IN GAMEBOARD //
 
 
-// FUNCTIONS USED IN BUTTON EVENTS //
 
-// Function to determine whether something is a word //
+//! FUNCTIONS USED IN BUTTON EVENTS //
+
+// Function to determine whether something is a word via API //
 async function isValidWord(word) {
     try{
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
@@ -474,11 +575,11 @@ function errorBox () {
 
 }
 
-// END FUNCTIONS USED IN BUTTON EVENTS //
+//! END FUNCTIONS USED IN BUTTON EVENTS //
 
 
 
-// FUNCTIONS USED IN NAVIGATION //
+//! FUNCTIONS USED IN NAVIGATION //
 
 // Function to turn on the option to click the letter icon //
 function allowLetterIconClick() {
@@ -567,19 +668,29 @@ function allowHowTo() {
     });
 };
 
-// END FUNCTIONS USED IN NAVIGATION //
-
-
-
-// BUTTONS //
-
-// Event for clicking the clear button which clears the whole board //
-document.getElementById('clear-button').addEventListener('click', () => {
-    clearGameBoard();
-    pointTotal.innerHTML = 0;
+// Animation for keyboard button press //
+document.querySelectorAll('.key').forEach(function(button) {
+    button.addEventListener('click', function() {
+        this.classList.add('animate');
+        setTimeout(() => {
+            this.classList.remove('animate');
+        }, 300); // duration of the animation in milliseconds
+    });
 });
 
-// Event flor clicking the submission button to alert if you've won or if there are errors //
+//! END FUNCTIONS USED IN NAVIGATION //
+
+
+
+//! BUTTONS //
+
+// Event for clicking the clear button which clears the whole board //
+/*document.getElementById('clear-button').addEventListener('click', () => {
+    clearGameBoard();
+    pointTotal.innerHTML = 0;
+});*/
+
+// Event for clicking the submission button to alert if you've won or if there are errors //
 document.getElementById('submission-button').addEventListener("click", async () => {
 
     await processWords(activeWordList, listOfWordLocations, isValidWord);
@@ -587,4 +698,4 @@ document.getElementById('submission-button').addEventListener("click", async () 
 
 })
 
-// END BUTTONS //
+//! END BUTTONS //
