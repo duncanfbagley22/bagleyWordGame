@@ -49,6 +49,7 @@ window.addEventListener('DOMContentLoaded', () => {
         allowLetterIconClick();
         allowHowTo();
         initializeBoard();
+        loadWords();
     });
     // Level 2 button click, set the layout, turn on icons, add target point total //
     document.getElementById('levelTwo').addEventListener('click', () => {
@@ -61,8 +62,9 @@ window.addEventListener('DOMContentLoaded', () => {
         allowLetterIconClick();
         allowHowTo();
         initializeBoard();
+        loadWords();
     });
-    // Level 2 button click, set the layout, turn on icons, add target point total //
+    // Level 3 button click, set the layout, turn on icons, add target point total //
     document.getElementById('levelThree').addEventListener('click', () => {
         gameLayout = levelThreeLayouts[Math.floor(Math.random() * 5)];
         levelSelectModal.style.display = 'none';
@@ -73,6 +75,7 @@ window.addEventListener('DOMContentLoaded', () => {
         allowLetterIconClick();
         allowHowTo();
         initializeBoard();
+        loadWords();
     });
 });
 
@@ -84,6 +87,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Function that handles inputs of letters and creating the board //
 function initializeBoard() {
+
     // Clear anything currently on the board
     while (gameBoard.firstChild) {
         gameBoard.removeChild(gameBoard.firstChild);
@@ -164,10 +168,13 @@ function initializeBoard() {
                 // Creates an empty square if the square location is blank
                 const emptySquare = document.createElement('div');
                 emptySquare.classList.add('empty-square');
-                gameBoard.appendChild(emptySquare);
+                gameBoard.appendChild(emptySquare);     
             }
+            
         }
     }
+
+    animateSquares();
 
     // Event listener for custom keyboard clicks
     document.querySelectorAll('.key').forEach(key => {
@@ -491,6 +498,40 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function animateSquares() {
+    const children = gameBoard.children;
+
+    let delay = 0;
+    const maindelay = 0.03;
+    const secondarydelay = 0.005;
+
+    // Diagonal indices as an array of arrays
+    const diagonalIndices = [
+        [0], 
+        [1, 7], 
+        [2, 8, 14], 
+        [3, 9, 15, 21], 
+        [4, 10, 16, 22, 28], 
+        [5, 11, 17, 23, 29, 35], 
+        [6, 12, 18, 24, 30, 36, 42], 
+        [13, 19, 25, 31, 37, 43, 49], 
+        [20, 26, 32, 38, 44, 50], 
+        [27, 33, 39, 45, 51], 
+        [34, 40, 46, 52], 
+        [41, 47, 53], 
+        [48, 54], 
+        [55]
+    ];
+
+    diagonalIndices.forEach((indices, mainIdx) => {
+        indices.forEach((index, secondaryIdx) => {
+            children[index].style.animationDelay = `${delay}s`;
+            children[index].classList.add('popIn');
+            delay += secondaryIdx === 0 ? maindelay : secondarydelay;
+        });
+    });
+}
+
 //! END FUNCTIONS USED IN GAMEBOARD //
 
 
@@ -498,14 +539,23 @@ function getRandomInt(min, max) {
 //! FUNCTIONS USED IN BUTTON EVENTS //
 
 // Function to determine whether something is a word via API //
-async function isValidWord(word) {
-    try{
-        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-        return response.ok;
+let wordList = [];
+
+async function loadWords() {
+    try {
+        const response = await fetch('englishWordsList.json');
+        if (response.ok) {
+            wordList = await response.json();
+        } else {
+            console.error('Failed to load words.json');
+        }
+    } catch (error) {
+        console.error('Error loading words.json:', error);
     }
-    catch(error) {
-        return false;
-    }
+}
+
+function isValidWord(word) {
+    return wordList.includes(word.toLowerCase());
 }
 
 // Function to clear the whole game board //
