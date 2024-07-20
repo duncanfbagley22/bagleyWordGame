@@ -88,7 +88,8 @@ h1{
 }
 
 body{
-    background-color:var(--main-light-purple);
+    background: linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%);
+    background-attachment: fixed;
     overflow: hidden;
     max-width: 100%;
 }
@@ -117,15 +118,13 @@ header{
 
 #game-board-container{
     position: absolute;
-    background-color: var(--main-blue);
-    top: 20.28rem;
     left: 50%;
-    top: 70px;
+    top: 73px;
     transform: translate(-50%);
     width: var(--main-width);
     height: 390px;
     border-radius: 10px;
-    border-style: solid;
+    border-style: none;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
@@ -165,11 +164,11 @@ header{
     background-color: white;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
-    width: 40px;
-    height: 40px;
+    width: 2.75rem;
+    height: 2.75rem;
     position: relative;
-    border-style: solid;
-    border-radius: 5px;
+    border: 2px solid grey; 
+    border-radius: 3px;
     text-align: center;
     align-items: center;
     display: flex;
@@ -178,6 +177,7 @@ header{
     box-sizing: border-box;
     left: 50%;
     transform: translate(-50%);
+
 }
 
 .square{
@@ -185,8 +185,9 @@ header{
 }
 
 .empty-square {
-    background-color: black;
-    opacity: 1;
+    background: #777777;
+    border-style: none;
+    filter: brightness(90%);
 }
 
 .double-square {
@@ -206,6 +207,10 @@ header{
     align-self: flex-end;
     margin-bottom: 2px;
     cursor: pointer;
+    position: absolute;
+    bottom: -1%;
+    right: 12%;
+
 }
 
 .square-input {
@@ -438,25 +443,25 @@ header{
 
 .progress-container {
     width: var(--main-width);
-    background: var(--main-light-grey);
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(219,219,219,1) 100%);
     position: relative;
     top: 40px;
     left: 50%;
     transform: translate(-50%);
     border-style: solid;
     box-sizing: border-box;
-    border-radius: 20px;
-    height: 15px;
+    border-radius: 5px;
+    height: 19px;
 }
 
 .progress-bar {
     height: 100%;
     width: 0%;
     background-color: var(--main-blue);
-    border-radius: 5px;
+    border-radius: 3px;
     box-sizing: border-box;
     transition: width 0.75s ease;
-    z-index: -10;
+    z-index: -100;
 }
 
 #point-total-container, #target-point-total-container{
@@ -467,10 +472,10 @@ header{
     font-weight: bold;
     top: 50%;
     transform: translate(-5px,-50%);
-    width: 20px;
-    height: 20px;
+    width: 1.5rem;
+    height: 1.25rem;
     background-color: var(--main-blue);
-    border-radius: 50%;
+    border-radius: 5px;
     border: 2px solid black;
     transition: left 0.75s ease;
     display: flex;
@@ -483,27 +488,25 @@ header{
     left: 67%;
 }
 
-/* Container for the keyboard */
 .keyboard {
     display: grid;
     grid-template-columns: repeat(20, 1fr);
-    gap: 2px;
+    gap: 4px;
     width: 520px;
     margin: 20px auto;
     padding: 0px;
     border-radius: 10px;
     border: none;
     position: relative;
-    top: 425px;
+    top: 422px;
     box-sizing: border-box;
     height: 160px;
 }
 
-/* Individual key styles */
 .key {
     background-color: var(--main-white);
     border-radius: 5px;
-    border: solid;
+    border: none;
     text-align: center;
     font-size: 22px;
     cursor: pointer;
@@ -516,6 +519,7 @@ header{
     align-items: center;
     justify-content: center;
     position: relative;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .key::after {
@@ -524,10 +528,9 @@ header{
     bottom: 5px;
     right: 5px;
     font-size: 10px;
-    color: #333;
+    color: #444444;
 }
 
-/* Special keys */
 .key.enter, .key.backspace {
     grid-column: span 3;
     font-size: 20px;
@@ -551,14 +554,28 @@ header{
     cursor:default;
 }
 
-@keyframes bounce {
+@keyframes keyClick {
     0% { transform: scale(1); }
     50% { transform: scale(1.2); }
     100% { transform: scale(1); }
 }
 
 .key.animate {
-    animation: bounce 0.2s;
+    animation: keyClick 0.1s;
+}
+
+
+@keyframes popIn {
+    0%, 100% {
+        transform: translate(-50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%) scale(1.05);
+    }
+}
+
+.square.popIn, .empty-square.popIn {
+    animation: popIn .5s forwards;
 }
 
 @media (max-width: 770px){
@@ -572,9 +589,9 @@ header{
     header{font-size: 18px;}
     .letterScores{left: 50%;}
     .howTo{left:50%}
-    .keyboard{width: 95%; height: 190px;}
+    .keyboard{width: 100%; height: 190px;}
     .key::after{left: 50%;
         transform: translate(-50%, 25%);}
     .key.enter{font-size: 12px;}
-    .progress-container{width: calc(var(--main-width)*1.05)}
+    .progress-container{width: calc(var(--main-width)*1.01)}
 }
