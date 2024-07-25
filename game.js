@@ -46,7 +46,6 @@ window.addEventListener('DOMContentLoaded', () => {
         listOfWordLocations = findWords(gameLayout);
         targetPointTotal = getRandomInt(sumArrayValues(gameLayout), sumArrayValues(gameLayout) * 3);
         target.innerHTML = targetPointTotal;
-        allowLetterIconClick();
         allowHowTo();
         initializeBoard();
         loadWords();
@@ -59,7 +58,6 @@ window.addEventListener('DOMContentLoaded', () => {
         listOfWordLocations = findWords(gameLayout);
         targetPointTotal = getRandomInt(sumArrayValues(gameLayout), sumArrayValues(gameLayout) * 3);
         target.innerHTML = targetPointTotal;
-        allowLetterIconClick();
         allowHowTo();
         initializeBoard();
         loadWords();
@@ -72,7 +70,6 @@ window.addEventListener('DOMContentLoaded', () => {
         listOfWordLocations = findWords(gameLayout);
         targetPointTotal = getRandomInt(sumArrayValues(gameLayout), sumArrayValues(gameLayout) * 3);
         target.innerHTML = targetPointTotal;
-        allowLetterIconClick();
         allowHowTo();
         initializeBoard();
         loadWords();
@@ -464,17 +461,15 @@ function updateWords() {
 function increaseProgress(current, target) {
     const progressBar = document.getElementById('progress-bar');
     let width = parseInt(progressBar.style.width);
-    const currentScoreIndicator = document.getElementById('point-total-container');
-    const targetScoreIndicator = document.getElementById('target-point-total-container');
     if (isNaN(width)) {width = 0};
-    width = current/target*100*.67;
+    width = current/target*100*.7;
     if (width>100) {width = 100};
     if (width<0) {width = 0};
     progressBar.style.width = width + '%';
-    currentScoreIndicator.style.left = width + '%';
     if (current===target && current>0) 
-    {progressBar.style.backgroundColor = '#32CD32'; currentScoreIndicator.style.backgroundColor = '#32CD32'; targetScoreIndicator.style.backgroundColor = '#32CD32'} 
-    else {progressBar.style.backgroundColor = 'var(--main-blue)'; currentScoreIndicator.style.backgroundColor = 'var(--main-blue)'; targetScoreIndicator.style.backgroundColor = 'var(--main-blue)'};
+    {progressBar.style.background = 'linear-gradient(90deg, #66E066, #32CD32, #28A828)';}
+    else if (current>target) {progressBar.style.background = 'linear-gradient(90deg, #FF9873, #FF7F50, #E67046)'}
+    else {progressBar.style.background = 'linear-gradient(90deg, #FFD633, #FFBF00, #E6A800)'};
 
 }
 
@@ -502,8 +497,8 @@ function animateSquares() {
     const children = gameBoard.children;
 
     let delay = 0;
-    const maindelay = 0.03;
-    const secondarydelay = 0.005;
+    const maindelay = 0.01;
+    const secondarydelay = .01;
 
     // Diagonal indices as an array of arrays
     const diagonalIndices = [
@@ -556,15 +551,6 @@ async function loadWords() {
 
 function isValidWord(word) {
     return wordList.includes(word.toLowerCase());
-}
-
-// Function to clear the whole game board //
-function clearGameBoard() {
-    gameBoard.innerHTML = '';
-    initializeBoard();
-    activeWordList = [];
-    lengthMistakeList = [];
-    validityMistakeList = [];
 }
 
 // Function to take all the letters and maps them to words and determines if they are valid words //
@@ -631,58 +617,6 @@ function errorBox () {
 
 //! FUNCTIONS USED IN NAVIGATION //
 
-// Function to turn on the option to click the letter icon //
-function allowLetterIconClick() {
-    const letterIcon = document.getElementById('letterIcon');
-
-    letterIcon.addEventListener('click', () => {
-        let container = document.querySelector('.letterScores');
-
-        if (container) {
-            container.classList.remove('fade-in');
-            container.classList.add('fade-out');
-            letterIcon.style.color = 'black';
-
-            container.addEventListener('animationend', function onAnimationEnd() {
-                container.remove();
-                container.removeEventListener('animationend', onAnimationEnd);
-            });
-        } else {
-            container = document.createElement('div');
-            container.classList.add('letterScores');
-            container.classList.add('fade-in');
-            letterIcon.style.color = 'var(--main-blue)';
-
-            const header = document.createElement('h1');
-            header.innerHTML = 'Scores by Letter';
-            header.style.textAlign = 'center';
-            container.appendChild(header);
-
-            const letters = ['A1', 'B3', 'C3', 'D2', 'E1', 'F4', 'G2', 'H4', 'I1', 'J8', 'K5', 'L1', 'M3', 'N1', 'O1', 'P3', 'Q10', 'R1', 'S1', 'T1', 'U1', 'V4', 'W4', 'X8', 'Y4', 'Z10'];
-
-            for (let i = 0; i < letters.length; i++) {
-                const letterSquare = document.createElement('div');
-                letterSquare.classList.add('scoreSquare');
-
-                const letter = letters[i];
-                const mainLetter = document.createElement('span');
-                mainLetter.textContent = letter[0];
-                letterSquare.appendChild(mainLetter);
-
-                if (letter.length > 1) {
-                    const subscript = document.createElement('sub');
-                    subscript.textContent = letter.slice(1);
-                    letterSquare.appendChild(subscript);
-                }
-
-                container.appendChild(letterSquare);
-            }
-
-            letterScoresContainer.appendChild(container);
-        }
-    });
-};
-
 // Function to turn on the option to click the question mark icon //
 function allowHowTo() {
     const howToIcon = document.getElementById('howToIcon');
@@ -707,7 +641,7 @@ function allowHowTo() {
 
             const header = document.createElement('h1');
             const howToBody = document.createElement('p');
-            howToBody.innerHTML = 'Enter a letter in each square. The scores for each letter are added together for the current score. Try to enter words to reach the target score.' + "<br />" + "<br />" + 'Green squares are worth double. Blue squares are worth triple. Red squares are negative.' + "<br />" + "<br />" + 'Press clear to erase entire board' + "<br />" + "<br />" + 'Press X' + "<sub>1</sub>" + ' icon to see scores by letter'  + "<br />" + "<br />" + 'Use comments icon to add comments on the whole project, and the construction icon to see future plans';
+            howToBody.innerHTML = 'Enter a letter in each square. The scores for each letter are added together for the current score. Try to enter words to reach the target score.' + "<br />" + "<br />" + 'Green squares are worth double. Blue squares are worth triple. Red squares are negative.' + "<br />" + "<br />" + 'Use comments icon to add comments on the whole project, and the construction icon to see future plans';
             header.innerHTML = 'How to Play';
             header.style.textAlign = 'center';
             container.appendChild(header);
